@@ -33,6 +33,10 @@
 
 + (instancetype)cyclesImageViewWithFrame:(CGRect)frame images:(NSArray *)images;
 /**
+ *  轮播频率(次/秒)
+ */
+@property (nonatomic, assign) CGFloat timeInterval;
+/**
  * delegate 代理属性
  **/
 @property (nonatomic, weak) id<JUICyclesImageViewDelegate>delegate;

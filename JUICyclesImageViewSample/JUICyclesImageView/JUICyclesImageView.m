@@ -60,6 +60,10 @@ typedef enum {
 + (instancetype)cyclesImageViewWithFrame:(CGRect)frame images:(NSArray *)images {
     return [[self alloc] initWithFrame:frame images:images];
 }
+- (void)setTimeInterval:(CGFloat)timeInterval {
+    _timeInterval = (timeInterval >= 0) ? timeInterval : 0;
+    [NSTimer scheduledTimerWithTimeInterval:_timeInterval target:self selector:@selector(moveInCycles) userInfo:nil repeats:YES];
+}
 #pragma mark - 初始化
 - (void)initializeWithImages:(NSArray*)images {
     _arrImgs = images && images.count ? images : _Images;
@@ -109,6 +113,10 @@ typedef enum {
     leftIndex = _arrImgs.count - 1;
     rightIndex = 1;
 }
+#pragma mark - 执行轮播
+- (void)moveInCycles {
+    [contentView setContentOffset:CGPointMake(contentView.width * 2, 0) animated:YES];
+}
 #pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     offsetX = contentView.contentOffset.x;
@@ -118,6 +126,9 @@ typedef enum {
     }else if(offsetX < contentView.width){
         scrollDirection = JUIScrollDirectionLeft;
     }
+}
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    [self judgeScrollDirectionEvent];
 }
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (!decelerate) {
