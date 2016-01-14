@@ -60,6 +60,7 @@ typedef enum {
 + (instancetype)cyclesImageViewWithFrame:(CGRect)frame images:(NSArray *)images {
     return [[self alloc] initWithFrame:frame images:images];
 }
+#pragma mark - setter
 - (void)setTimeInterval:(CGFloat)timeInterval {
     _timeInterval = (timeInterval >= 0) ? timeInterval : 0;
     [NSTimer scheduledTimerWithTimeInterval:_timeInterval target:self selector:@selector(moveInCycles) userInfo:nil repeats:YES];
