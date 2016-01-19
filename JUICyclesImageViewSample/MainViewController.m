@@ -36,14 +36,17 @@
     [super viewDidLoad];
     self.title = @"JUICyclesImageViewSample";
     self.view.backgroundColor = [UIColor whiteColor];
-    tableview = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+//    tableview = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     //用法简单快捷==========================
     JUICyclesImageView *cycImgView = [JUICyclesImageView cyclesImageViewWithFrame:CGRectMake(0, 74, self.view.width, self.view.width * 0.5) images:_arrayImages];
+    cycImgView.presentController = self;
     cycImgView.timeInterval = 3;
-    tableview.tableHeaderView = cycImgView;
+//    tableview.tableHeaderView = cycImgView;
     //=====================================
-    [self.view addSubview:tableview];
+    [self.view addSubview:cycImgView];
 }
+
+
 
 
 @end

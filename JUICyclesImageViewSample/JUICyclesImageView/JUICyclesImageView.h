@@ -23,6 +23,10 @@
 
 @interface JUICyclesImageView : UIView
 /**
+ *  当前控制器(解决图片滚动和适配问题)
+ */
+@property (nonatomic, weak) UIViewController *presentController;
+/**
  *  图片地址集合
  */
 @property (nonatomic, strong) NSArray *Images;

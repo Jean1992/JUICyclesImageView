@@ -61,6 +61,10 @@ typedef enum {
     return [[self alloc] initWithFrame:frame images:images];
 }
 #pragma mark - setter
+- (void)setPresentController:(UIViewController *)presentController {
+    _presentController = presentController;
+    _presentController.automaticallyAdjustsScrollViewInsets = NO;
+}
 - (void)setTimeInterval:(CGFloat)timeInterval {
     _timeInterval = (timeInterval >= 0) ? timeInterval : 0;
     [NSTimer scheduledTimerWithTimeInterval:_timeInterval target:self selector:@selector(moveInCycles) userInfo:nil repeats:YES];
