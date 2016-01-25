@@ -29,6 +29,7 @@
                          @"http://img3.3lian.com/2013/s1/14/d/51.jpg",
                          @"http://img3.3lian.com/2014/c1/51/d/34.jpg"
                          ];
+        //本地演示图片可能较为模糊, 是图片本身的问题
         _arrayImagesLocal = [NSMutableArray array];
         for (int i = 0; i < 5; i++) {
             NSString *str = [NSString stringWithFormat:@"%02d", i];
@@ -53,6 +54,16 @@
     cycImgView.presentController = self;
     cycImgView.timeInterval = 3;
     [self.view addSubview:cycImgView];
+    
+    
+    
+    
+    
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake(10, cycImgView.bottom + 30, cycImgView.width - 20, 100)];
+    lbl.text = @"控件2为本地图片, 本地演示图片比较模糊, 是图片自身问题, 只做参考";
+    lbl.numberOfLines = 0;
+    lbl.font = [UIFont systemFontOfSize:17];
+    [self.view addSubview:lbl];
 }
 
 
