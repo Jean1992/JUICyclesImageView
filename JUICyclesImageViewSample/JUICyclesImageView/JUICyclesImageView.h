@@ -29,13 +29,14 @@
 /**
  *  图片地址集合
  */
-@property (nonatomic, strong) NSArray *Images;
+//@property (nonatomic, strong) NSArray *Images;
 /**
  *  自定义构造方法
  */
 - (instancetype)initWithFrame:(CGRect)frame images:(NSArray *)images;
-
+- (instancetype)initWithLocalFrame:(CGRect)frame images:(NSArray*)images;
 + (instancetype)cyclesImageViewWithFrame:(CGRect)frame images:(NSArray *)images;
++ (instancetype)cyclesImageViewWithLocalFrame:(CGRect)frame images:(NSArray *)images;
 /**
  *  轮播频率(次/秒)
  */

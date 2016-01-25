@@ -13,6 +13,7 @@
     UITableView *tableview;
 }
 @property (nonatomic) NSArray *arrayImages;
+@property (nonatomic, strong) NSMutableArray *arrayImagesLocal;
 @end
 
 @implementation MainViewController
@@ -28,6 +29,11 @@
                          @"http://img3.3lian.com/2013/s1/14/d/51.jpg",
                          @"http://img3.3lian.com/2014/c1/51/d/34.jpg"
                          ];
+        _arrayImagesLocal = [NSMutableArray array];
+        for (int i = 0; i < 5; i++) {
+            NSString *str = [NSString stringWithFormat:@"%02d", i];
+            [_arrayImagesLocal addObject:str];
+        }
     }
     return self;
 }
@@ -36,13 +42,16 @@
     [super viewDidLoad];
     self.title = @"JUICyclesImageViewSample";
     self.view.backgroundColor = [UIColor whiteColor];
-//    tableview = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    //用法简单快捷==========================
+//异步加载网络图片
     JUICyclesImageView *cycImgView = [JUICyclesImageView cyclesImageViewWithFrame:CGRectMake(0, 74, self.view.width, self.view.width * 0.5) images:_arrayImages];
     cycImgView.presentController = self;
     cycImgView.timeInterval = 3;
-//    tableview.tableHeaderView = cycImgView;
-    //=====================================
+    [self.view addSubview:cycImgView];
+    
+//加载本地图片(图片数组只需传入图片名字字符串)
+    cycImgView = [JUICyclesImageView cyclesImageViewWithLocalFrame:CGRectMake(0, 74 + self.view.width * 0.5 + 20, self.view.width, self.view.width * 0.5) images:_arrayImagesLocal];
+    cycImgView.presentController = self;
+    cycImgView.timeInterval = 3;
     [self.view addSubview:cycImgView];
 }
 

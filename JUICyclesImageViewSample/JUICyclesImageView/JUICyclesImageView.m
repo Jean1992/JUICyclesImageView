@@ -23,6 +23,7 @@ typedef enum {
     JUIScrollDirection scrollDirection; //滚动方向
     NSInteger currentIndex, leftIndex, rightIndex; //左中右三个图片索引
     UIPageControl *pageCtr; //页码指示器
+    BOOL isLocaled;
 }
 /**
  *  图片地址集合
@@ -34,31 +35,40 @@ typedef enum {
 #pragma mark - 覆盖父类方法
 - (instancetype)init {
     if (self = [super init]) {
-        [self initializeWithImages:nil];
+        [self initializeWithImages:nil isLocal:YES];
     }
     return self;
 }
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super initWithCoder:aDecoder]) {
-        [self initializeWithImages:nil];
+        [self initializeWithImages:nil isLocal:YES];
     }
     return self;
 }
 - (instancetype)initWithFrame:(CGRect)frame {
     if ( self = [super initWithFrame:frame]) {
-        [self initializeWithImages:nil];
+        [self initializeWithImages:nil isLocal:YES];
     }
     return self;
 }
 #pragma mark - 自定义构造方法
 - (instancetype)initWithFrame:(CGRect)frame images:(NSArray*)images {
     if (self = [super initWithFrame:frame]) {
-        [self initializeWithImages:images];
+        [self initializeWithImages:images isLocal:NO];
     }
     return self;
 }
 + (instancetype)cyclesImageViewWithFrame:(CGRect)frame images:(NSArray *)images {
     return [[self alloc] initWithFrame:frame images:images];
+}
+- (instancetype)initWithLocalFrame:(CGRect)frame images:(NSArray*)images {
+    if (self = [super initWithFrame:frame]) {
+        [self initializeWithImages:images isLocal:YES];
+    }
+    return self;
+}
++ (instancetype)cyclesImageViewWithLocalFrame:(CGRect)frame images:(NSArray *)images {
+    return [[self alloc] initWithLocalFrame:frame images:images];
 }
 #pragma mark - setter
 - (void)setPresentController:(UIViewController *)presentController {
@@ -70,10 +80,11 @@ typedef enum {
     [NSTimer scheduledTimerWithTimeInterval:_timeInterval target:self selector:@selector(moveInCycles) userInfo:nil repeats:YES];
 }
 #pragma mark - 初始化
-- (void)initializeWithImages:(NSArray*)images {
-    _arrImgs = images && images.count ? images : _Images;
+- (void)initializeWithImages:(NSArray*)images isLocal:(BOOL)isLocal{
+    isLocaled = isLocal;
+    _arrImgs = images;
     [self setupSubviews];
-    [self setupData];
+    isLocal ? [self setupDataLocal] : [self setupData];
 }
 /**
  *  初始化控件
@@ -114,6 +125,17 @@ typedef enum {
     [centerImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs.firstObject]];
     [leftImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs.lastObject]];
     [rightImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs[1]]];
+    currentIndex = 0;
+    leftIndex = _arrImgs.count - 1;
+    rightIndex = 1;
+}
+- (void)setupDataLocal {
+    leftImgView = [contentView viewWithTag:100];
+    centerImgView = [contentView viewWithTag:101];
+    rightImgView = [contentView viewWithTag:102];
+    centerImgView.image = [UIImage imageNamed:_arrImgs.firstObject];
+    leftImgView.image = [UIImage imageNamed:_arrImgs.lastObject];
+    rightImgView.image = [UIImage imageNamed:_arrImgs[1]];
     currentIndex = 0;
     leftIndex = _arrImgs.count - 1;
     rightIndex = 1;
@@ -167,14 +189,14 @@ typedef enum {
     currentIndex = [self changeIndexHandle:currentIndex isLeft:YES];
     leftIndex = [self changeIndexHandle:leftIndex isLeft:YES];
     rightIndex = [self changeIndexHandle:rightIndex isLeft:YES];
-    [self changeImage];
+    isLocaled ? [self changeImageLocal] : [self changeImage];
 }
 //视图右滚
 - (void)imageViewScrollToRight {
     currentIndex = [self changeIndexHandle:currentIndex isLeft:NO];
     leftIndex = [self changeIndexHandle:leftIndex isLeft:NO];
     rightIndex = [self changeIndexHandle:rightIndex isLeft:NO];
-    [self changeImage];
+    isLocaled ? [self changeImageLocal] : [self changeImage];
 }
 //改变三个索引
 - (CGFloat)changeIndexHandle:(NSInteger)index isLeft:(BOOL)isLeft {
@@ -198,6 +220,11 @@ typedef enum {
     [centerImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs[currentIndex]]];
     [leftImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs[leftIndex]]];
     [rightImgView sd_setImageWithURL:[NSURL URLWithString:_arrImgs[rightIndex]]];
+}
+- (void)changeImageLocal {
+    centerImgView.image = [UIImage imageNamed:_arrImgs[currentIndex]];
+    leftImgView.image = [UIImage imageNamed:_arrImgs[leftIndex]];
+    rightImgView.image = [UIImage imageNamed:_arrImgs[rightIndex]];
 }
 #pragma mark - 委托事件(点击图片)
 - (void)imageDidClick {
